@@ -120,7 +120,7 @@
 <script src="js/jquery.js"></script>
 <script>
     //初始化
-    var ws_server='ws://vm.swoole.com:9502';
+    var ws_server='ws://swoole.ffddd.top:9502';
     var ws=new WebSocket(ws_server);
     //建立web连接
     ws.onopen=function(){
