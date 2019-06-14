@@ -28,3 +28,5 @@ Route::get('insert','mongo\MongoController@insert');//添加
 Route::get('show','mongo\MongoController@show');//展示
 Route::get('update','mongo\MongoController@update');//修改
 Route::get('del','mongo\MongoController@del');//删除
+Route::get('insertAll','mongo\MongoController@insertAll');//循环添加数据
+Route::get('a','mongo\MongoController@a');//循环添加数据
