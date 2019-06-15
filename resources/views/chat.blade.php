@@ -97,6 +97,33 @@
             color:#fff;
             padding:5px 10px;
         }
+
+        *{
+            margin:0;
+            padding:0;
+        }
+        .box{
+            position: relative;
+            top:100px;
+            left:100px;
+            width: 140px;
+            height: 100px;
+            background: #088cb7;
+            -moz-border-radius: 12px;
+            -webkit-border-radius: 12px;
+            border-radius: 12px;
+        }
+        .box:before{
+            position: absolute;
+            content: "";
+            width: 0;
+            height: 0;
+            right: 100%;
+            top: 38px;
+            border-top: 13px solid transparent;
+            border-right: 26px solid #088cb7;
+            border-bottom: 13px solid transparent;
+        }
     </style>
 </head>
 <body>
@@ -104,7 +131,7 @@
     <div class="talk_show" id="words">
         <div class="atalk"><span id="asay">欢迎进入聊天室</span></div>
     </div>
-    <div class="talk_input"  id="talk_input_id">>
+    <div class="talk_input"  id="talk_input_id">
         <input type="text" class="talk_word" id="talkwords">
         <input type="button" value="发送" class="talk_sub" id="talksub" >
     </div>
@@ -115,12 +142,19 @@
 <script src="js/jquery.js"></script>
 <script>
     //初始化
-    var ws_server='ws://swoole.ffddd.top:9502';
+    var ws_server='ws://vm.swoole.com:9502';
     var ws=new WebSocket(ws_server);
     //建立web连接
     ws.onopen=function(){
         //绑定事件
         $(document).on('click','#talksub',function(){
+            var user_id=localStorage.getItem("user_id");
+
+            if(user_id==null) {
+                alert('您还没有登录,请先登录');
+                window.location.href = "/login";
+                return false;
+            }
             var content=$('#talkwords').val();
             var data={
                 type:"message",
@@ -129,14 +163,18 @@
                 date:Date.now()
             };
             ws.send(JSON.stringify(data));
-            $('.talk_word').empty();
         })
     }
     //接收服务器发送的数据
     ws.onmessage=function(d){
         var str=d.data;
         var arr=JSON.parse(str);
+        var user_name=localStorage.getItem("user_name");
+
+        $('.talk_show').append("<font style='color:red'>"+user_name+"</font>").append("<font style='color:red'>"+'说:'+"</font>").append("<br/>");
+
         $(".talk_show").append(arr.text).append("<br/>");
+        var data=$("#talkwords").val('');
     }
     console.log(ws);
 </script>

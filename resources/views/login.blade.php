@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>用户登录</title>
 </head>
 <body>
 <h3><a href="reg">还没有账号，去注册</a></h3>
@@ -24,27 +24,42 @@
 </html>
 <script src="js/jquery.js"></script>
 <script>
-    $(document).ready(function(){
+    //初始化
+    var ws_server='ws://vm.swoole.com:9501';
+    var ws=new WebSocket(ws_server);
+    //建立web连接
+    ws.onopen=function(){
+        //绑定事件
         $(document).on('click','#btn',function(){
             var user_name=$("input[name='user_name']").val();
             var user_pwd=$("input[name='user_pwd']").val();
             var data={};
             data.user_name=user_name;
             data.user_pwd=user_pwd;
-            $.ajax({
-                url:"loginDo",
-                method:"POST",
-                data:data,
-                dataType:"json",
-                success:function(res){
-                    if(res.code==1){
-                        alert(res.msg);
-                    }else if(res.code==2){
-                        alert(res.msg);
-                        window.location.href="/chat";
-                    }
-                }
-            })
+
+            var data={
+                type:"message",
+                text:data,
+                // id:1,
+                // date:Date.now()
+            };
+            ws.send(JSON.stringify(data));
         })
-    })
+    }
+    //接收服务器发送的数据
+    ws.onmessage=function(d){
+        var str=d.data;
+        var arr=JSON.parse(str);
+        if(arr.code==1){
+            var user_id=arr.user_id;
+            var user_name=arr.user_name;
+            localStorage.setItem("user_id",user_id);
+            localStorage.setItem("user_name",user_name);
+            alert(arr.msg);
+            window.location.href="/chat";
+        }else if(arr.code==2){
+            alert(arr.msg);
+        }
+    }
+    console.log(ws);
 </script>
