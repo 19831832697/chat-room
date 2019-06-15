@@ -25,7 +25,7 @@
 <script src="js/jquery.js"></script>
 <script>
     //初始化
-    var ws_server='ws://vm.swoole.com:9501';
+    var ws_server='ws://swoole.ffddd.top:9501';
     var ws=new WebSocket(ws_server);
     //建立web连接
     ws.onopen=function(){
